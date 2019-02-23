@@ -1,0 +1,100 @@
+﻿
+@{
+    Layout = "/Views/Shared/_LayoutNew.cshtml";
+}
+
+<div class="header">
+    <div class="header-wrap">
+        <h1 class="logo pull-left">
+            <a href="Home/Index">
+                <img src="/res/static/images/logo.png" alt="" class="logo-img">
+                <img src="/res/static/images/logo-text.png" alt="" class="logo-text">
+            </a>
+        </h1>
+        <div class="blog-nav pull-right">
+            <ul class="layui-nav pull-left">
+                <li class="layui-nav-item layui-this"><a href="index.html">首页</a></li>
+                <li class="layui-nav-item"><a href="message.html">留言</a></li>
+                <li class="layui-nav-item"><a href="about.html">关于</a></li>
+            </ul>
+            <a href="#" class="personal pull-left">
+                <i class="layui-icon layui-icon-username"></i>
+            </a>
+        </div>
+        <div class="mobile-nav pull-right" id="mobile-nav">
+            <a href="javascript:;">
+                <i class="layui-icon layui-icon-more"></i>
+            </a>
+        </div>
+    </div>
+    <ul class="pop-nav" id="pop-nav">
+        <li><a href="index.html">首页</a></li>
+        <li><a href="message.html">留言</a></li>
+        <li><a href="about.html">关于</a></li>
+    </ul>
+</div>
+<div class="container-wrap">
+    <div class="container container-message container-details container-comment">
+        <div class="contar-wrap">
+            <div class="item">
+                <div class="item-box  layer-photos-demo1 layer-photos-demo">
+                    <h3><a href="details.html">@ViewBag.model.title</a></h3>
+                    <h5>发布于：<span>@ViewBag.model.create_time</span></h5>
+                    <div>
+                        @Html.Raw(ViewBag.model.contents)
+                    </div>
+                    <div class="count layui-clear">
+                        <span class="pull-left">阅读 <em>@ViewBag.model.viewCount</em></span>
+                        <span class="pull-right like"><i class="layui-icon layui-icon-praise"></i><em>@ViewBag.model.clickCount</em></span>
+                    </div>
+                </div>
+            </div>
+            <form class="layui-form" action="">
+                <div class="layui-form-item layui-form-text">
+                    <textarea class="layui-textarea" id="txtContent" style="resize:none" placeholder="写点什么啊"></textarea>
+                </div>
+                <div class="btnbox">
+                    <a onclick="SaveComment(@ViewBag.model.Id)" id="sure">
+                        确定
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="~/res/layui/lay/modules/layer.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        var str = "<li class=\"layui-nav-item\"><a href=\"/Home/Index\">首页</a></li>";
+        str += "<li class=\"layui-nav-item\"><a href=\"/Home/Message\">留言</a></li>";
+        str += "<li class=\"layui-nav-item layui-this\"><a href=\"/Home/PublishView\">发布</a></li>";
+        $("#ulnav").html(str);
+    });
+
+    //保存评论
+    function SaveComment(id) {
+        $.ajax({
+            url: "/Home/SaveComment",
+            type: "post",
+            dataType: "json",
+            async: false,
+            data: {
+                id: id,
+                comments: $("#txtContent").val()
+            },
+            success: function (data) {
+                layer.msg(data.message, {
+                    time: 5000, //20s后自动关闭
+                });
+                window.location = "/Home/Details/" + id;
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                alert(XMLHttpRequest.status);
+                alert(XMLHttpRequest.readyState);
+                alert(textStatus);
+            }
+        });
+    }
+</script>
+

@@ -1,0 +1,31 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome</h1>
+    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+</div>
+<table class="table table-bordered">
+<tr>
+    <td>姓名</td>
+    <td>地址</td>
+    <td>年龄</td>
+</tr>
+@foreach (var item in ViewBag.list)
+{
+    <tr>
+    <td>@item.name</td>
+    <td>@item.address</td>
+    <td>@item.Age</td>
+</tr>
+}
+</table>
+<a href="/Home/Test">跳转</a>
+<input type="button" value="确定" onclick="Test()" />
+<script>
+function Test()
+{
+    alert("我是测试666");
+}
+</script>

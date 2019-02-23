@@ -1,0 +1,113 @@
+﻿
+@{
+    ViewData["Title"] = "Message";
+    Layout = "~/Views/Shared/_LayoutNew.cshtml";
+}
+
+<div class="container-wrap">
+    <div class="container container-message">
+        <div class="contar-wrap" id="contar-wrap">
+            <form class="layui-form" action="">
+                <div class="layui-form-item layui-form-text">
+                    <textarea class="layui-textarea" id="txtContent" style="resize:none"></textarea>
+                </div>
+            </form>
+            <div class="item-btn">
+                <button onclick="SaveMessage()" class="layui-btn layui-btn-normal" id="item-btn">提交</button>
+            </div>
+
+            <div id="LAY-msg-box">
+                <div class="info-box" id="divlist">
+                    @*<div class="info-item">                       
+                        <div class="info-text">                       
+                            <p class="info-intr">父爱如山，不善表达。回想十多年前，总记得父亲有个宽厚的肩膀，小小的自己跨坐在上面，越过人山人海去看更广阔的天空，那个时候期望自己有一双翅膀，能够像鸟儿一样飞得高，看得远。虽然父亲有时会和自己开玩笑，但在做错事的时候会受到严厉的训斥。父亲有双粗糙的大手掌。</p>
+                        </div>
+                    </div>*@
+                </div>
+            </div>
+            @*<div class="contar-wrap" id="divlist">
+
+            </div>*@
+            <div id="divpage"></div>
+        </div>
+    </div>
+</div>
+<script src="~/res/layui/lay/modules/layer.js"></script>
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        var str = "<li class=\"layui-nav-item\"><a href=\"/Home/Index\">首页</a></li>";
+        str += "<li class=\"layui-nav-item layui-this\"><a href=\"/Home/Message\">留言</a></li>";
+        str += "<li class=\"layui-nav-item \"><a href=\"/Home/PublishView\">发布</a></li>";
+        $("#ulnav").html(str);
+    });
+    //保存留言
+    function SaveMessage() {
+        if ($("#txtContent").val() == "") {
+            layer.msg("请输入留言内容");
+            return false;
+        }
+        else {
+            $.ajax({
+                url: "/Home/SaveMessage",
+                type: "post",
+                dataType: "json",
+                async: false,
+                data: {
+                    content: $("#txtContent").val()
+                },
+                success: function (data) {
+                    //layer.msg(data.message, {
+                    //    time: 3000, //20s后自动关闭
+                    //});
+                    window.location = location;
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    alert(XMLHttpRequest.status);
+                    alert(XMLHttpRequest.readyState);
+                    alert(textStatus);
+                }
+            });
+        }
+    }
+
+    layui.use(['laypage', 'layer'], function () {
+        var laypage = layui.laypage;
+        var layer = layui.layer;
+        $.getJSON("/Home/GetMessagePageList?page=1&pagesize=5", function (result) {
+            //调用分页
+            laypage.render({
+                elem: 'divpage'
+                , count: result.total,
+                limit: 5,
+                jump: function (obj, first) {
+                    var str = "";
+                    var dataurl = "";
+                    if (!first) {
+                        dataurl = "/Home/GetMessagePageList?page=" + obj.curr + "&pagesize=" + obj.limit;
+                    }
+                    else {
+                        dataurl = "/Home/GetMessagePageList?page=1&pagesize=" + obj.limit;                       
+                    }
+                    //alert(dataurl);
+                    $.getJSON(dataurl, function (result) {
+                        $("#divlist").html("正在加载中。。。");
+                        if (result.data.length > 0) {
+                            layui.each(result.data, function (index, item) {
+                                str += " <div class=\"info-item\"><div class=\"info-text\">";                            
+                                str += "<p class=\"info-intr\">" + item.contents + "</p>";
+                                str += "</div></div>";                              
+                            });
+                            $("#divlist").html(str);
+                        }
+                        else {
+                            $("#divlist").html("暂无数据");
+                        }
+                    });
+                }
+            });
+        });
+
+    });
+</script>
+

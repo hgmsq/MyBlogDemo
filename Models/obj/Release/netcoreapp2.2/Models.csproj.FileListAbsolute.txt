@@ -1,9 +1,0 @@
-E:\DotNetCore\Models\bin\Release\netcoreapp2.2\Models.deps.json
-E:\DotNetCore\Models\bin\Release\netcoreapp2.2\Models.dll
-E:\DotNetCore\Models\bin\Release\netcoreapp2.2\Models.pdb
-E:\DotNetCore\Models\obj\Release\netcoreapp2.2\Models.csprojAssemblyReference.cache
-E:\DotNetCore\Models\obj\Release\netcoreapp2.2\Models.csproj.CoreCompileInputs.cache
-E:\DotNetCore\Models\obj\Release\netcoreapp2.2\Models.AssemblyInfoInputs.cache
-E:\DotNetCore\Models\obj\Release\netcoreapp2.2\Models.AssemblyInfo.cs
-E:\DotNetCore\Models\obj\Release\netcoreapp2.2\Models.dll
-E:\DotNetCore\Models\obj\Release\netcoreapp2.2\Models.pdb

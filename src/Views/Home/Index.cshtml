@@ -1,0 +1,79 @@
+﻿@{
+Layout = "/Views/Shared/_LayoutNew.cshtml";
+}
+<div class="container-wrap">
+        <div class="container">
+            @*<h4 class="item-title">
+                <p><i class="layui-icon layui-icon-speaker"></i>999公告：<span>欢迎来到我的博客</span></p>
+            </h4>*@
+            <div class="contar-wrap" id="divlist">
+             
+            </div>
+            <div id="demo20"></div>
+        </div>
+    </div>  
+  
+<script src="~/js/Date.js"></script>
+   
+    <script type="text/javascript">     
+        layui.use(['laypage', 'layer'], function () {
+            var laypage = layui.laypage;
+               var layer = layui.layer;                    
+            $.getJSON("/Home/GetPage", function (result) {
+                //调用分页
+                laypage.render({
+                    elem: 'demo20'
+                    , count: result.total,
+                    limit: 5,
+                   jump: function (obj, first) {                       
+                        var str = "";                        
+                       
+                        if (!first) {
+                            $.getJSON("/Home/GetPageNew?page=" + obj.curr + "&pagesize=" + obj.limit, function (result) {
+                                $("#divlist").html("正在加载中。。。");
+                                if (result.data.length > 0) {
+                                    layui.each(result.data, function (index, item) {
+                                        str += " <div class=\"item\">";
+                                        str += "<div class=\"item-box  layer-photos-demo1 layer-photos-demo\">";
+                                        str += " <h3><a href=\"/Home/Details/" + item.id + "\">" + item.title + "</a></h3><h5>发布于：<span>" + timeago(item.create_time) + "</span></h5>";
+                                        str += "<div>" + item.contents + "</div>";
+                                        str += "<div class=\"comment count\"><a href=\"/Home/Details/" + item.id + "\" style=\"width:40%\"  >评论</a ><a href=\"javascript:;\" class=\"like\">阅读 &nbsp;" + item.clickCount + "</a></div> ";
+                                        str += "</div>";
+                                        
+                                        // arr.push('<li>' + item.title + '</li>');
+                                    });
+                                    $("#divlist").html(str);
+                                }
+                                else {
+                                    $("#divlist").html("暂无数据");
+                                }
+                            });
+                        }
+                        else {
+                            $.getJSON("/Home/GetPageNew?page=1&pagesize=" + obj.limit, function (result) {
+                                $("#divlist").html("正在加载中。。。");
+                                if (result.data.length > 0) {
+                                    layui.each(result.data, function (index, item) {
+                                        str += " <div class=\"item\">";
+                                        str += "<div class=\"item-box  layer-photos-demo1 layer-photos-demo\">";
+                                        str += " <h3><a href=\"/Home/Details/" + item.id + "\">" + item.title + "</a></h3><h5>发布于：<span>" + timeago(item.create_time) + "</span></h5>";
+                                        str += "<div>" + item.contents + "</div>";
+                                        str += "<div class=\"comment count\"><a href=\"/Home/Details/" + item.id + "\" style=\"width:40%\"  >评论</a ><a href=\"javascript:;\" class=\"like\">阅读 &nbsp;" + item.clickCount + "</a></div> ";
+                                        str += "</div>";
+                                      
+                                    });
+                                    $("#divlist").html(str);
+                                }
+                                else {
+                                    $("#divlist").html("暂无数据");
+                                }
+                            });                        
+                        }                      
+                       
+                    }
+                });
+            });          
+
+        });
+
+    </script>

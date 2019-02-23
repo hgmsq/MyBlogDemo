@@ -1,0 +1,106 @@
+﻿
+@{
+    Layout = "/Views/Shared/_LayoutNew.cshtml";
+}
+<div class="container-wrap">
+    <div class="container container-message container-details">
+        <div class="contar-wrap">
+            <div class="item">
+                <div class="item-box  layer-photos-demo1 layer-photos-demo">
+                    <h3><a href="details.html">@ViewBag.model.title</a></h3>
+                    <h5>发布于：<span>@ViewBag.model.create_time</span></h5>
+                    <div>
+                        @Html.Raw(ViewBag.model.contents)
+                    </div>
+                    <div class="count layui-clear">
+                        <span class="pull-left">阅读 <em>@ViewBag.model.viewCount</em></span>
+                        <span class="pull-right like"><i onclick="SaveClick(@ViewBag.model.Id)" class="layui-icon layui-icon-praise"></i><em>
+                            <span id="spanclick"> @ViewBag.model.clickCount</span></em></span>
+                    </div>
+                </div>
+            </div>
+            <a name="comment"> </a>
+            <div class="comt layui-clear">
+                <a href="javascript::" class="pull-left">评论</a>
+                <a href="/Home/Comment/@ViewBag.model.Id" class="pull-right">写评论</a>
+            </div>
+            <div id="LAY-msg-box">
+                @if (ViewBag.commentlist != null)
+                {
+                    foreach (var item in ViewBag.commentlist)
+                    {
+                        <div class="info-item">
+                            <img class="info-img" src="../res/static/images/info-img.png" alt="">
+                            <div class="info-text">
+                                <p class="title count">
+                                    <span class="name"></span>
+                                    <span class="info-img like">
+                                        <i onclick="SaveCommentClick(@item.Id)" class="layui-icon layui-icon-praise"></i><em>
+                                         <span id="spanclick2">  @item.clickCount</span></em>
+                                    </span>                                   
+                                </p>
+                                <p class="info-intr">@item.contents</p>
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="~/res/layui/lay/modules/layer.js"></script>
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        var str = "<li class=\"layui-nav-item\"><a href=\"/Home/Index\">首页</a></li>";
+        str += "<li class=\"layui-nav-item\"><a href=\"/Home/Message\">留言</a></li>";
+        str += "<li class=\"layui-nav-item layui-this\"><a href=\"/Home/PublishView\">发布</a></li>";
+        $("#ulnav").html(str);
+    });
+    
+    function SaveClick(id) {
+        $.ajax({
+            url: "/Home/SaveClick",
+            type: "post",
+            dataType: "json",
+            async: false,
+            data: { id: id },
+            success: function (data) {
+                layer.msg(data.message);
+                var count = parseInt($("#spanclick").text()) + 1;
+                $("#spanclick").html(count)
+                //window.reload();
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                alert(XMLHttpRequest.status);
+                alert(XMLHttpRequest.readyState);
+                alert(textStatus);
+            }
+        });
+    }
+
+
+    function SaveCommentClick(id) {
+        $.ajax({
+            url: "/Home/SaveCommentClick",
+            type: "post",
+            dataType: "json",
+            async: false,
+            data: { id: id },
+            success: function (data) {
+                layer.msg(data.message);
+                var count = parseInt($("#spanclick2").text()) + 1;
+                $("#spanclick2").html(count)
+                //window.reload();
+            },
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                alert(XMLHttpRequest.status);
+                alert(XMLHttpRequest.readyState);
+                alert(textStatus);
+            }
+        });
+    }
+</script>
+
+
